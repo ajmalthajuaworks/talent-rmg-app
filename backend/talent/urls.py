@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     EmployeeProfileViewSet, SkillViewSet, ProjectExperienceViewSet, CompetencyRatingViewSet,
     login_page, signup_page, logout_view, dashboard_view, profile_update,
-    project_add, project_delete, skill_add, skill_delete, competency_validate,
+    project_add, project_delete, project_validate, skill_add, skill_delete, competency_validate,
     admin_login_page, admin_logout_view, me_view
 )
 
@@ -20,6 +20,7 @@ urlpatterns = [
     path('profile/update/', profile_update, name='profile_update'),
     path('projects/add/', project_add, name='project_add'),
     path('projects/<int:pk>/delete/', project_delete, name='project_delete'),
+    path('projects/<int:pk>/validate/', project_validate, name='project_validate'),
     path('skills/add/', skill_add, name='skill_add'),
     path('skills/<int:pk>/delete/', skill_delete, name='skill_delete'),
     path('competencies/<int:pk>/validate/', competency_validate, name='competency_validate'),

@@ -322,6 +322,8 @@
                       <th>Industry</th>
                       <th>Duration</th>
                       <th>Tech Stack</th>
+                      <th>Status</th>
+                      <th>Decisions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -333,6 +335,19 @@
                         <td>{{ p.industry }}</td>
                         <td>{{ p.start_date|date:"M Y" }} – {% if p.end_date %}{{ p.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
                         <td><span style="font-size:12px;color:var(--text-muted);">{{ p.technology_stack }}</span></td>
+                        <td>
+                          {% if p.validation_status == 'APPROVED' %}
+                            <span class="badge" style="background:#dcfce7;color:#16a34a;font-weight:700;">APPROVED</span>
+                          {% elif p.validation_status == 'REJECTED' %}
+                            <span class="badge" style="background:#fee2e2;color:#dc2626;font-weight:700;">REJECTED</span>
+                          {% else %}
+                            <span class="badge" style="background:#fef3c7;color:#d97706;font-weight:700;">PENDING</span>
+                          {% endif %}
+                        </td>
+                        <td>
+                          <a href="{% url 'project_validate' p.id %}?action=approve" class="btn btn-success btn-sm">✓ Approve</a>
+                          <a href="{% url 'project_validate' p.id %}?action=reject" class="btn btn-danger btn-sm">✕ Reject</a>
+                        </td>
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -443,7 +458,58 @@
         'my-profile': 'Admin Profile Details'
       };
       document.getElementById('page-title').innerText = titles[tabId] || 'Management Portal';
+      if (history.replaceState) {
+        history.replaceState(null, '', '?tab=' + tabId);
+      }
     }
+
+    // Auto-select tab from URL parameter if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTab = urlParams.get('tab');
+    if (initialTab) {
+      showTab(initialTab);
+    }
+
+    // Interactive Action Handler for Instant Decisions
+    document.addEventListener('click', async function(e) {
+      const btn = e.target.closest('a.btn-success, a.btn-danger');
+      if (!btn || !btn.href || !btn.href.includes('/validate/')) return;
+      
+      e.preventDefault();
+      const row = btn.closest('tr');
+      const actionText = btn.innerText;
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+
+      try {
+        const res = await fetch(btn.href, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          // Animate and mark row
+          if (row) {
+            const statusCell = row.querySelector('td:nth-last-child(2)');
+            if (statusCell && btn.href.includes('projects')) {
+              const isApprove = btn.href.includes('action=approve');
+              statusCell.innerHTML = isApprove 
+                ? '<span class="badge" style="background:#dcfce7;color:#16a34a;font-weight:700;">APPROVED</span>'
+                : '<span class="badge" style="background:#fee2e2;color:#dc2626;font-weight:700;">REJECTED</span>';
+              btn.parentElement.innerHTML = '<span style="font-size:12px;color:var(--text-muted);font-weight:600;">Decided</span>';
+            } else {
+              row.style.transition = 'opacity 0.3s, transform 0.3s';
+              row.style.opacity = '0';
+              row.style.transform = 'translateX(20px)';
+              setTimeout(() => row.remove(), 300);
+            }
+          }
+        } else {
+          window.location.href = btn.href;
+        }
+      } catch {
+        window.location.href = btn.href;
+      }
+    });
   </script>
 </body>
 </html>

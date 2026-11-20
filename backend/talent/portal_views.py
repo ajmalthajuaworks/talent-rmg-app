@@ -69,9 +69,25 @@ def competency_validate(request, pk):
             comp.validation_status = 'REJECTED'
             comp.manager_feedback = request.POST.get('feedback') or 'Needs further project evidence.'
         comp.save()
-        if is_api_request(request): return JsonResponse({'message': f'Rating {comp.validation_status.lower()}.'})
-        messages.success(request, f'Skill "{comp.skill.name}" marked as {comp.validation_status}.')
-    return redirect('dashboard')
+        messages.success(request, f'Skill "{comp.skill.name}" for {comp.employee.user.username} marked as {comp.validation_status}.')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'message': f'Rating {comp.validation_status.lower()}.', 'status': comp.validation_status})
+    return redirect('/dashboard/?tab=admin-validations')
+
+@csrf_exempt
+def project_validate(request, pk):
+    if request.method in ['POST', 'GET']:
+        proj = get_object_or_404(ProjectExperience, id=pk)
+        action = request.POST.get('action') or request.GET.get('action', 'approve')
+        if action == 'approve':
+            proj.validation_status = 'APPROVED'
+        elif action == 'reject':
+            proj.validation_status = 'REJECTED'
+        proj.save()
+        messages.success(request, f'Project "{proj.project_name}" marked as {proj.validation_status}.')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'message': f'Project {proj.validation_status.lower()}.', 'status': proj.validation_status})
+    return redirect('/dashboard/?tab=admin-projects')
 
 @csrf_exempt
 def profile_update(request):

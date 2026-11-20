@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/update/', talent_views.profile_update, name='profile_update'),
     path('projects/add/', talent_views.project_add, name='project_add'),
     path('projects/<int:pk>/delete/', talent_views.project_delete, name='project_delete'),
+    path('projects/<int:pk>/validate/', talent_views.project_validate, name='project_validate'),
     path('skills/add/', talent_views.skill_add, name='skill_add'),
     path('skills/<int:pk>/delete/', talent_views.skill_delete, name='skill_delete'),
     path('competencies/<int:pk>/validate/', talent_views.competency_validate, name='competency_validate'),

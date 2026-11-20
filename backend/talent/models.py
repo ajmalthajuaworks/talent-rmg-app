@@ -77,6 +77,7 @@ class ProjectExperience(models.Model):
     technology_stack = models.TextField(help_text="Comma separated list of technologies used")
     individual_responsibilities = models.TextField()
     measurable_achievements = models.TextField(blank=True, null=True)
+    validation_status = models.CharField(max_length=20, choices=VALIDATION_STATUS_CHOICES, default='PENDING')
 
     def __str__(self):
         return f"{self.project_name} ({self.employee.user.username})"

@@ -2,11 +2,11 @@
 from .viewsets import EmployeeProfileViewSet, SkillViewSet, ProjectExperienceViewSet, CompetencyRatingViewSet
 from .auth_views import login_page, signup_page, logout_view, me_view
 from .admin_auth_views import admin_login_page, admin_logout_view
-from .portal_views import dashboard_view, profile_update, project_add, project_delete, skill_add, skill_delete, competency_validate
+from .portal_views import dashboard_view, profile_update, project_add, project_delete, project_validate, skill_add, skill_delete, competency_validate
 
 __all__ = [
     'EmployeeProfileViewSet', 'SkillViewSet', 'ProjectExperienceViewSet', 'CompetencyRatingViewSet',
     'login_page', 'signup_page', 'logout_view', 'me_view', 'dashboard_view',
-    'profile_update', 'project_add', 'project_delete', 'skill_add', 'skill_delete', 'competency_validate',
+    'profile_update', 'project_add', 'project_delete', 'project_validate', 'skill_add', 'skill_delete', 'competency_validate',
     'admin_login_page', 'admin_logout_view'
 ]
