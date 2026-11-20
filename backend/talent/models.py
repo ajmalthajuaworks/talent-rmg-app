@@ -57,7 +57,7 @@ class Skill(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({self.get_dimension_display()})"
+        return f"{self.skill_code} - {self.name} ({self.get_dimension_display()})"
 
 
 class ProjectExperience(models.Model):
@@ -79,7 +79,7 @@ class ProjectExperience(models.Model):
     measurable_achievements = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.project_name} - {self.employee.user.last_name}"
+        return f"{self.project_name} ({self.employee.user.username})"
 
 
 class CompetencyRating(models.Model):
@@ -108,4 +108,4 @@ class CompetencyRating(models.Model):
         unique_together = ('employee', 'skill')
 
     def __str__(self):
-        return f"{self.employee.user.last_name} - {self.skill.name} ({self.validation_status})"
+        return f"{self.employee.user.username} - {self.skill.name} ({self.validation_status})"

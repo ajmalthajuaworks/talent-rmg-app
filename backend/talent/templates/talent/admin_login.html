@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal Sign In — TalentRMG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    :root {
+      --brand: #2563eb;
+      --brand-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .admin-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 440px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-popup {
+      display: none;
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+      animation: slideDown 0.3s ease;
+    }
+
+    .login-popup.error {
+      background: #ef4444;
+    }
+
+    @keyframes slideDown {
+      from {
+        top: -50px;
+        opacity: 0;
+      }
+
+      to {
+        top: 24px;
+        opacity: 1;
+      }
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 800;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      margin: 0 auto 12px;
+    }
+
+    .brand-header h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .badge-admin {
+      display: inline-block;
+      margin-top: 8px;
+      background: #eff6ff;
+      color: var(--brand);
+      border: 1px solid #bfdbfe;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .alert-error {
+      background: var(--danger-bg);
+      color: #991b1b;
+      border: 1px solid var(--danger-border);
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-control:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 11px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+
+    .btn-submit:hover {
+      background: var(--brand-hover);
+    }
+
+    .card-footer-links {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .card-footer-links a {
+      color: var(--brand);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .card-footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="login-popup" class="login-popup"></div>
+  <div class="admin-card">
+    <div class="brand-header">
+      <div class="logo-badge">T</div>
+      <h1>TalentRMG</h1>
+      <p>Competency & Resource Management</p>
+      <span class="badge-admin">🔒 Administrator Portal</span>
+    </div>
+
+    {% if error %}
+    <div class="alert-error">
+      <span>⚠️</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert-error" style="background:#fef2f2;color:#991b1b;border:1px solid #fecaca;">
+      <span>⚠️</span>
+      <span>{{ msg }}</span>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'admin_login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Admin Username or Email</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="admin or admin@company.com"
+          required autofocus />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••••••" required />
+      </div>
+
+      <button type="submit" class="btn-submit">
+        Sign In as Admin →
+      </button>
+    </form>
+
+    <div class="card-footer-links">
+      <span>Regular employee? </span>
+      <a href="http://localhost:5173" target="_blank">Open Engineer Portal</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.querySelector('form');
+    const submitBtn = document.querySelector('.btn-submit');
+
+    function showPopup(text, type = 'success') {
+      let popup = document.getElementById('login-popup');
+      if (!popup) {
+        popup = document.createElement('div');
+        popup.id = 'login-popup';
+        popup.className = 'login-popup';
+        document.body.appendChild(popup);
+      }
+      popup.innerText = text;
+      popup.className = type === 'error' ? 'login-popup error' : 'login-popup';
+      popup.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Signing in...';
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const csrfEl = document.querySelector('[name=csrfmiddlewaretoken]');
+      const csrfToken = csrfEl ? csrfEl.value : '';
+
+      try {
+        const response = await fetch("{% url 'admin_login' %}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showPopup(`✅ ${data.message || 'Admin login successful!'}`, 'success');
+          setTimeout(() => {
+            window.location.href = data.redirect || '/dashboard/';
+          }, 800);
+        } else {
+          showPopup(`⚠️ ${data.error || 'Authentication failed.'}`, 'error');
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Sign In as Admin →';
+        }
+      } catch (err) {
+        console.error('Login request error:', err);
+        showPopup('⚠️ Network or server error. Please try again.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Sign In as Admin →';
+      }
+    });
+  </script>
+</body>
+
+</html>

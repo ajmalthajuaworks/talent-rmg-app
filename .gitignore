@@ -24,6 +24,11 @@ media/
 .vscode/
 .idea/
 
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+
 # Testing
 .coverage
 htmlcov/

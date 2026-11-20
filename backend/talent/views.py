@@ -1,24 +1,12 @@
-from rest_framework import viewsets
-from .models import EmployeeProfile, Skill, ProjectExperience, CompetencyRating
-from .serializers import (
-    EmployeeProfileSerializer, 
-    SkillSerializer, 
-    ProjectExperienceSerializer, 
-    CompetencyRatingSerializer
-)
+# views.py — Re-exports modular controllers to maintain clean line-count and backwards compatibility
+from .viewsets import EmployeeProfileViewSet, SkillViewSet, ProjectExperienceViewSet, CompetencyRatingViewSet
+from .auth_views import login_page, signup_page, logout_view, me_view
+from .admin_auth_views import admin_login_page, admin_logout_view
+from .portal_views import dashboard_view, profile_update, project_add, project_delete, skill_add, skill_delete, competency_validate
 
-class EmployeeProfileViewSet(viewsets.ModelViewSet):
-    queryset = EmployeeProfile.objects.all()
-    serializer_class = EmployeeProfileSerializer
-
-class SkillViewSet(viewsets.ModelViewSet):
-    queryset = Skill.objects.all()
-    serializer_class = SkillSerializer
-
-class ProjectExperienceViewSet(viewsets.ModelViewSet):
-    queryset = ProjectExperience.objects.all()
-    serializer_class = ProjectExperienceSerializer
-
-class CompetencyRatingViewSet(viewsets.ModelViewSet):
-    queryset = CompetencyRating.objects.all()
-    serializer_class = CompetencyRatingSerializer
+__all__ = [
+    'EmployeeProfileViewSet', 'SkillViewSet', 'ProjectExperienceViewSet', 'CompetencyRatingViewSet',
+    'login_page', 'signup_page', 'logout_view', 'me_view', 'dashboard_view',
+    'profile_update', 'project_add', 'project_delete', 'skill_add', 'skill_delete', 'competency_validate',
+    'admin_login_page', 'admin_logout_view'
+]
