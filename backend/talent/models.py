@@ -38,10 +38,20 @@ class EmployeeProfile(models.Model):
     employee_id = models.CharField(max_length=20, unique=True)
     designation = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
+    phone = models.CharField(max_length=50, blank=True, null=True)
+    location = models.CharField(max_length=150, blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+    years_of_experience = models.CharField(max_length=50, blank=True, null=True)
+    linkedin_url = models.CharField(max_length=255, blank=True, null=True)
     
     # Profile Status tracking
     is_profile_complete = models.BooleanField(default=False)
     last_substantive_update = models.DateTimeField(auto_now=True)
+    
+    # Admin Communication & Reminder tracking
+    admin_feedback = models.TextField(blank=True, null=True)
+    needs_project_update = models.BooleanField(default=False)
+    project_reminder_sent_at = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.employee_id}"

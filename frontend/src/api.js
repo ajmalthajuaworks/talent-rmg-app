@@ -1,7 +1,8 @@
 // api.js — Central API service for TalentRMG React Frontend
 
 async function request(endpoint, options = {}) {
-  const defaultHeaders = {
+  const isForm = options.body instanceof FormData
+  const defaultHeaders = isForm ? { 'Accept': 'application/json' } : {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   }
@@ -113,6 +114,28 @@ export async function deleteCompetencyRatingApi(ratingId) {
   } catch {
     return await request(`/competencies/${ratingId}/`, { method: 'DELETE' })
   }
+}
+
+// ── AI Resume Parsing API ───────────────────────────────────────────────────
+export async function parseResumeApi(fileOrText) {
+  try {
+    let res = null
+    if (fileOrText instanceof File || fileOrText instanceof Blob) {
+      const fd = new FormData()
+      fd.append('resume', fileOrText)
+      res = await request('/resume/parse/', { method: 'POST', body: fd })
+    } else if (typeof fileOrText === 'string') {
+      res = await request('/resume/parse/', {
+        method: 'POST',
+        body: JSON.stringify({ resume_text: fileOrText })
+      })
+    }
+    if (res && res.data) return res.data
+    if (res && res.extractedSkills) return res
+  } catch (err) {
+    console.warn('Backend AI resume parsing failed, using client heuristic fallback:', err)
+  }
+  return simulateResumeExtraction(fileOrText)
 }
 
 export { DEFAULT_SKILL_TAXONOMY, simulateResumeExtraction } from './data/initialData'

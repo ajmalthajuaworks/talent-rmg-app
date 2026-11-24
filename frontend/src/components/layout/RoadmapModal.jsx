@@ -5,7 +5,7 @@ export default function RoadmapModal({ isOpen, onClose }) {
     {
       week: 'Week 1',
       title: 'Profile Foundation, Resume Ingestion & Project Management',
-      status: 'Current Week (Active)',
+      status: 'Complete',
       badgeClass: 'badge-approved',
       items: [
         'ENG-O01 / ENG-O03: Account creation, login, and standardized employee profile setup (forms for designation, department, employee ID).',
@@ -19,8 +19,8 @@ export default function RoadmapModal({ isOpen, onClose }) {
     {
       week: 'Week 2',
       title: 'Skill Evidence Mapping, AI Recommendations & Validation Feedback',
-      status: 'Planned for Week 2',
-      badgeClass: 'badge-pending',
+      status: 'Current Week (Active)',
+      badgeClass: 'badge-approved',
       items: [
         'ENG-O05: Map each project experience to relevant technical skills, domain skills, and functional roles.',
         'ENG-O09: Review AI skill recommendations extracted from resume descriptions, accept or reject proposed codes.',

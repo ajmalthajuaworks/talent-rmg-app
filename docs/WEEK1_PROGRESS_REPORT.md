@@ -26,7 +26,7 @@
 
 ## 4. Demonstration Video #1
 
-* **Link / File:** `<paste Video #1 link or filename>` *(3.5-minute script ready in [docs/WEEK1_DEMO_VIDEO_SCRIPT.md](file:///c:/Users/ajmal.thaju/Project/talent-rmg-app/docs/WEEK1_DEMO_VIDEO_SCRIPT.md))*
+* **Link / File:** `https://nestgroup-my.sharepoint.com/:v:/g/personal/ajmal_thaju_nestgroup_net/IQD-QsDNgP_5Tbdfjc9Xu-_XARWKc8MLmhWDfpoKjyjtB_Y?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=Pc8Ukq` *(3.5-minute script ready in [docs/WEEK1_DEMO_VIDEO_SCRIPT.md](file:///c:/Users/ajmal.thaju/Project/talent-rmg-app/docs/WEEK1_DEMO_VIDEO_SCRIPT.md))*
 
 ## 5. Unresolved Blockers & Next Week Plan
 

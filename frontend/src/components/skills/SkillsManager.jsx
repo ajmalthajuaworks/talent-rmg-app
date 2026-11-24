@@ -1,21 +1,36 @@
-import { useState } from 'react'
-import { DEFAULT_SKILL_TAXONOMY } from '../api'
+import { useState, useEffect } from 'react'
+import { DEFAULT_SKILL_TAXONOMY } from '../../api'
 import SkillsTable from './SkillsTable'
 import SkillRatingModal from './SkillRatingModal'
+import BulkSkillModal from './BulkSkillModal'
 
 export default function SkillsManager({
   competencies,
   projects,
   onAddOrUpdateRating,
-  onDeleteRating
+  onBulkAddRatings,
+  onDeleteRating,
+  initialDimension = 'TECHNICAL'
 }) {
-  const [activeDimension, setActiveDimension] = useState('TECHNICAL')
+  const [activeDimension, setActiveDimension] = useState(initialDimension)
+  const [reviewFilter, setReviewFilter] = useState('ALL')
   const [modalOpen, setModalOpen] = useState(false)
+  const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const [editingCompetency, setEditingCompetency] = useState(null)
 
-  const filteredCompetencies = competencies.filter(
-    (c) => (c.skill?.dimension || c.dimension) === activeDimension
-  )
+  useEffect(() => {
+    if (initialDimension) setActiveDimension(initialDimension)
+  }, [initialDimension])
+
+  const filteredCompetencies = competencies.filter((c) => {
+    const dimMatch = (c.skill?.dimension || c.dimension) === activeDimension
+    if (!dimMatch) return false
+    const status = (c.validation_status || 'DRAFT').toUpperCase()
+    if (reviewFilter === 'PENDING') return status === 'PENDING' || status === 'DRAFT'
+    if (reviewFilter === 'APPROVED') return status === 'APPROVED'
+    if (reviewFilter === 'REJECTED') return status === 'REJECTED' || status === 'REVISED'
+    return true
+  })
 
   const availableTaxonomy = DEFAULT_SKILL_TAXONOMY.filter(
     (s) => s.dimension === activeDimension
@@ -53,13 +68,18 @@ export default function SkillsManager({
             <span>⚙️</span>
             <span>Competency Framework & Skills Rating</span>
           </div>
-          <button onClick={openAddModal} className="btn btn-primary btn-sm">
-            + Rate New Skill
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={() => setBulkModalOpen(true)} className="btn btn-secondary btn-sm" style={{ fontWeight: '600' }}>
+              ⚡ Quick Batch Add / Paste
+            </button>
+            <button onClick={openAddModal} className="btn btn-primary btn-sm">
+              + Rate Single Skill
+            </button>
+          </div>
         </div>
         <div className="card-body">
           <p style={{ color: '#64748b', fontSize: '13.5px', marginBottom: '20px' }}>
-            Rate your proficiency against the approved 6-level framework (Zero, Trained, Beginner, Intermediate, Advanced, Expert). Mapped project experiences serve as verifiable evidence for manager review.
+            Rate your proficiency against the approved 6-level framework (Zero, Trained, Beginner, Intermediate, Advanced, Expert). Use <strong>Quick Batch Add</strong> to add 10–20+ skills from LinkedIn/Naukri at once.
           </p>
 
           <div style={{ display: 'flex', gap: '8px', borderBottom: '2px solid #e2e8f0', marginBottom: '20px' }}>
@@ -96,6 +116,26 @@ export default function SkillsManager({
             ))}
           </div>
 
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748b' }}>STATUS:</span>
+            {[
+              { key: 'ALL', label: 'All Rated' },
+              { key: 'PENDING', label: '⏳ Pending Review' },
+              { key: 'APPROVED', label: '✓ Approved' },
+              { key: 'REJECTED', label: '✕ Rejected / Revisions' },
+            ].map((seg) => (
+              <button
+                key={seg.key}
+                type="button"
+                onClick={() => setReviewFilter(seg.key)}
+                className={`btn btn-sm ${reviewFilter === seg.key ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ fontSize: '11.5px', padding: '4px 10px' }}
+              >
+                {seg.label}
+              </button>
+            ))}
+          </div>
+
           {filteredCompetencies.length > 0 ? (
             <SkillsTable
               competencies={filteredCompetencies}
@@ -126,6 +166,13 @@ export default function SkillsManager({
         editingCompetency={editingCompetency}
         activeDimension={activeDimension}
         availableTaxonomy={availableTaxonomy}
+        projects={projects}
+      />
+
+      <BulkSkillModal
+        isOpen={bulkModalOpen}
+        onClose={() => setBulkModalOpen(false)}
+        onSubmit={onBulkAddRatings}
         projects={projects}
       />
     </div>

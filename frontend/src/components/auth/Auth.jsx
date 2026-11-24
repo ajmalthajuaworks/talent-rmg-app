@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { loginApi, signupApi } from '../api'
+import { loginApi, signupApi } from '../../api'
 import LoginForm from './LoginForm'
 import SignupForm from './SignupForm'
 

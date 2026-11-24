@@ -4,8 +4,9 @@ from .views import (
     EmployeeProfileViewSet, SkillViewSet, ProjectExperienceViewSet, CompetencyRatingViewSet,
     login_page, signup_page, logout_view, dashboard_view, profile_update,
     project_add, project_delete, project_validate, skill_add, skill_delete, competency_validate,
-    admin_login_page, admin_logout_view, me_view
+    admin_login_page, admin_logout_view, me_view, send_employee_feedback
 )
+from .resume_parser import resume_parse_view
 
 router = DefaultRouter()
 router.register(r'employees', EmployeeProfileViewSet)
@@ -18,6 +19,8 @@ urlpatterns = [
     path('admin-login/', admin_login_page, name='admin_login'),
     path('admin-logout/', admin_logout_view, name='admin_logout'),
     path('profile/update/', profile_update, name='profile_update'),
+    path('resume/parse/', resume_parse_view, name='resume_parse'),
+    path('employees/<int:employee_id>/feedback/', send_employee_feedback, name='send_employee_feedback'),
     path('projects/add/', project_add, name='project_add'),
     path('projects/<int:pk>/delete/', project_delete, name='project_delete'),
     path('projects/<int:pk>/validate/', project_validate, name='project_validate'),

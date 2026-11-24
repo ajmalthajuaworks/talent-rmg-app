@@ -31,6 +31,37 @@ export default function ProfileOverview({
 
   return (
     <div>
+      {(profile?.needs_project_update || profile?.admin_feedback) && (
+        <div
+          className="alert"
+          style={{
+            background: profile.needs_project_update ? '#fffbeb' : '#f8fafc',
+            border: `1.5px solid ${profile.needs_project_update ? '#fde68a' : '#cbd5e1'}`,
+            borderRadius: '10px', padding: '14px 18px', marginBottom: '20px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '22px' }}>{profile.needs_project_update ? '⚠️' : '💬'}</span>
+            <div>
+              <div style={{ fontWeight: '700', fontSize: '13.5px', color: '#0f172a' }}>
+                {profile.needs_project_update ? 'Action Required: Project Portfolio Update Requested' : 'Manager / Admin Notice'}
+              </div>
+              {profile.admin_feedback && (
+                <div style={{ fontSize: '13px', color: '#334155', fontStyle: 'italic', marginTop: '2px' }}>
+                  "{profile.admin_feedback}"
+                </div>
+              )}
+            </div>
+          </div>
+          {profile.needs_project_update && onNavigate && (
+            <button onClick={() => onNavigate('projects')} className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
+              Update Projects →
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="stat-grid">
         <div className="stat-card">
           <div className="stat-card-label">Profile Completeness</div>
@@ -64,8 +95,15 @@ export default function ProfileOverview({
 
       <div className="form-grid-2">
         <div className="card">
-          <div className="card-header">
+          <div className="card-header" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
             <div className="card-title"><span>👤</span> Standard Employee Profile</div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => onNavigate('profile-setup')}
+            >
+              ⚙️ Full Profile Setup
+            </button>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit}>

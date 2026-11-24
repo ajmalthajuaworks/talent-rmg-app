@@ -16,7 +16,7 @@ export default function LoginForm({ onSubmit, loading }) {
         <input
           type="text"
           className="form-control"
-          placeholder="e.g. ajmal"
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required

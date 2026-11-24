@@ -86,7 +86,7 @@ export default function ResumePreview({ profile, projects, competencies }) {
         }}>
           <div>
             <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#0f172a', letterSpacing: '-0.02em' }}>
-              {fullName}
+              {fullName?.toUpperCase()}
             </h1>
             <div style={{ fontSize: '15px', color: '#2563eb', fontWeight: '600', marginTop: '4px' }}>
               {profile.designation} · {profile.department}
