@@ -39,7 +39,7 @@ class ProjectExperienceViewSet(viewsets.ModelViewSet):
             return ProjectExperience.objects.filter(employee__user=user)
         if emp_id:
             return ProjectExperience.objects.filter(employee_id=emp_id)
-        return ProjectExperience.objects.none()
+        return ProjectExperience.objects.all()
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -61,7 +61,7 @@ class CompetencyRatingViewSet(viewsets.ModelViewSet):
             return CompetencyRating.objects.filter(employee__user=user)
         if emp_id:
             return CompetencyRating.objects.filter(employee_id=emp_id)
-        return CompetencyRating.objects.none()
+        return CompetencyRating.objects.all()
 
     def perform_create(self, serializer):
         user = self.request.user

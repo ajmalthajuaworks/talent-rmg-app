@@ -27,7 +27,14 @@ export default function SkillsTable({ competencies, onEdit, onDelete }) {
               </td>
               <td>
                 {comp.approved_rating ? (
-                  <span className="badge badge-approved">{comp.approved_rating}</span>
+                  <div>
+                    <span className="badge badge-approved">{comp.approved_rating}</span>
+                    {comp.approved_rating !== comp.self_assessed_rating && (
+                      <div style={{ fontSize: '11px', color: '#b45309', marginTop: '2px', fontWeight: '600' }}>
+                        Revised from {comp.self_assessed_rating}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <span style={{ color: '#94a3b8', fontSize: '12px' }}>Awaiting review</span>
                 )}
@@ -36,11 +43,16 @@ export default function SkillsTable({ competencies, onEdit, onDelete }) {
                 <span className={`badge badge-${(comp.validation_status || 'draft').toLowerCase()}`}>
                   {comp.validation_status || 'DRAFT'}
                 </span>
-                {comp.manager_feedback && (
+                {comp.validation_status === 'REJECTED' || comp.validation_status === 'REVISED' ? (
+                  <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '5px 8px', borderRadius: '6px', fontSize: '11.5px', marginTop: '5px' }}>
+                    <strong>Manager Note:</strong> "{comp.manager_feedback || 'Needs further project evidence.'}"
+                    <span style={{ display: 'block', color: '#b91c1c', marginTop: '2px', fontWeight: '600' }}>⚠️ Evidence gap</span>
+                  </div>
+                ) : comp.manager_feedback ? (
                   <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
                     "{comp.manager_feedback}"
                   </div>
-                )}
+                ) : null}
               </td>
               <td>
                 {comp.project_evidence && comp.project_evidence.length > 0 ? (

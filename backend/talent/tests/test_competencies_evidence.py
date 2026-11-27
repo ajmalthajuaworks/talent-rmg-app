@@ -101,3 +101,31 @@ class CompetencyEvidenceTests(TestCase):
         rating = CompetencyRating.objects.create(employee=self.profile, skill=self.tech_skill, self_assessed_rating='EXPERT')
         self.assertIn('compdev', str(rating))
         self.assertIn('Python', str(rating))
+
+    def test_skill_add_and_resubmit_flow_positive(self):
+        self.client.force_login(self.user)
+        # 1. Add skill rating
+        res = self.client.post('/skills/add/', {
+            'skill_id': self.tech_skill.id,
+            'rating': 'ADVANCED',
+            'employee': self.profile.id
+        }, content_type='application/json', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res.status_code, 201)
+        comp = CompetencyRating.objects.get(employee=self.profile, skill=self.tech_skill)
+        self.assertEqual(comp.self_assessed_rating, 'ADVANCED')
+        self.assertEqual(comp.validation_status, 'PENDING')
+
+        # 2. Resubmit with manager_feedback clarification and evidence
+        res2 = self.client.post('/skills/add/', {
+            'skill_id': self.tech_skill.id,
+            'rating': 'EXPERT',
+            'manager_feedback': 'Resubmitted: Attached clinical EHR project evidence',
+            'project_evidence': [{'id': self.project.id}],
+            'employee': self.profile.id
+        }, content_type='application/json', HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res2.status_code, 201)
+        comp.refresh_from_db()
+        self.assertEqual(comp.self_assessed_rating, 'EXPERT')
+        self.assertEqual(comp.validation_status, 'PENDING')
+        self.assertIn('Resubmitted:', comp.manager_feedback)
+        self.assertIn(self.project, comp.project_evidence.all())

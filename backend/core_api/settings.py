@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,11 @@ SECRET_KEY = 'django-insecure-de5db=4f5iu97x9m@#b1%$w5e#2xicyax-pl%gq7=%tzk_u=0g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Load environment variables from backend/.env
+load_dotenv(BASE_DIR / '.env')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
