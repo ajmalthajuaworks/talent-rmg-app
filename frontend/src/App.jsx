@@ -1,20 +1,7 @@
 import { useState, useEffect } from 'react'
-import Auth from './components/auth/Auth'
-import Sidebar from './components/layout/Sidebar'
-import TopNavbar from './components/layout/TopNavbar'
-import ProfileOverview from './components/profile/ProfileOverview'
-import ProfileSetup from './components/profile/ProfileSetup'
-import ResumeUpload from './components/resume/ResumeUpload'
-import ProjectsManager from './components/projects/ProjectsManager'
-import SkillsManager from './components/skills/SkillsManager'
-import ValidationStatus from './components/skills/ValidationStatus'
-import ResumePreview from './components/resume/ResumePreview'
-import RoadmapModal from './components/layout/RoadmapModal'
+import { Auth, Sidebar, TopNavbar, ProfileOverview, ProfileSetup, ResumeUpload, ProjectsManager, SkillsManager, ValidationStatus, ResumePreview, RoadmapModal } from './components'
 import { mapExtractedCompetencies, INITIAL_DEMO_COMPETENCIES } from './data/initialData'
-import {
-  getProjectsApi, addProjectApi, updateProjectApi, deleteProjectApi,
-  getCompetenciesApi, submitCompetencyRatingApi, deleteCompetencyRatingApi, logoutApi, updateProfileApi
-} from './api'
+import { getProjectsApi, addProjectApi, updateProjectApi, deleteProjectApi, getCompetenciesApi, submitCompetencyRatingApi, deleteCompetencyRatingApi, logoutApi, updateProfileApi, completeReminderApi } from './api'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -28,16 +15,13 @@ export default function App() {
     years_of_experience: '', linkedin_url: '', user: { first_name: '', last_name: '', username: '', email: '' }
   })
 
-  useEffect(() => {
-    localStorage.removeItem('talent_rmg_user')
-    sessionStorage.removeItem('talent_rmg_user')
-  }, [])
+  useEffect(() => { localStorage.removeItem('talent_rmg_user'); sessionStorage.removeItem('talent_rmg_user') }, [])
 
   const loadUserData = (u) => {
     const empId = u?.profile?.id || u?.user_id
     if (!empId) return
-    getProjectsApi(empId).then((d) => { const l = Array.isArray(d) ? d : d?.results; if (l?.length) setProjects(l) }).catch(() => {})
-    getCompetenciesApi(empId).then((d) => { const l = Array.isArray(d) ? d : d?.results; if (l?.length) setCompetencies(l) }).catch(() => {})
+    getProjectsApi(empId).then((d) => { const l = Array.isArray(d) ? d : d?.results; if (Array.isArray(l)) setProjects(l) }).catch(() => {})
+    getCompetenciesApi(empId).then((d) => { const l = Array.isArray(d) ? d : d?.results; if (Array.isArray(l)) setCompetencies(l) }).catch(() => {})
   }
 
   const notify = (msg) => { setFeedbackMsg(msg); setTimeout(() => setFeedbackMsg(''), 4500) }
@@ -62,21 +46,29 @@ export default function App() {
   const handleSaveProfile = async (updated) => {
     const payload = {
       employee_id: updated.employee_id, user_id: user?.user_id || user?.id,
-      first_name: updated.user?.first_name, last_name: updated.user?.last_name,
-      email: updated.user?.email, designation: updated.designation, department: updated.department,
-      phone: updated.phone, location: updated.location, summary: updated.summary,
-      years_of_experience: updated.years_of_experience, linkedin_url: updated.linkedin_url
+      first_name: updated.user?.first_name, last_name: updated.user?.last_name, email: updated.user?.email,
+      designation: updated.designation, department: updated.department, phone: updated.phone,
+      location: updated.location, summary: updated.summary, years_of_experience: updated.years_of_experience, linkedin_url: updated.linkedin_url
     }
     try {
       const res = await updateProfileApi(payload)
       const p = res?.profile || updated
-      setProfile(p)
-      if (user) setUser((prev) => ({ ...prev, profile: p }))
+      setProfile(p); if (user) setUser((prev) => ({ ...prev, profile: p }))
     } catch {
-      setProfile(updated)
-      if (user) setUser((prev) => ({ ...prev, profile: updated }))
+      setProfile(updated); if (user) setUser((prev) => ({ ...prev, profile: updated }))
     }
     notify('Profile details saved successfully.')
+  }
+
+  const handleCompleteReminder = async () => {
+    try {
+      const res = await completeReminderApi(profile?.id || user?.profile?.id)
+      const p = res?.profile || { ...profile, reminder_status: 'COMPLETED_BY_EMPLOYEE', needs_project_update: false }
+      setProfile(p); if (user) setUser((prev) => ({ ...prev, profile: p }))
+    } catch {
+      setProfile((prev) => ({ ...prev, reminder_status: 'COMPLETED_BY_EMPLOYEE' }))
+    }
+    notify('Project portfolio reminder marked as completed!')
   }
 
   const handleAddProject = async (p) => {
@@ -96,28 +88,34 @@ export default function App() {
   }
 
   const handleDeleteProject = async (id) => {
-    try { await deleteProjectApi(id) } catch {}
+    try { await deleteProjectApi(id, profile?.id || user?.profile?.id) } catch {}
     setProjects(projects.filter((p) => p.id !== id))
     notify('Project removed.')
   }
 
   const handleAddOrUpdateRating = async (c) => {
     const empId = profile?.id || user?.profile?.id
-    const idx = competencies.findIndex((x) => (x.skill?.id || x.skill_id) === c.skill_id)
+    const skillId = c.skill_id || c.skill?.id || (typeof c.skill === 'number' ? c.skill : null)
+    const code = c.skill_code || c.skill?.skill_code
+    const idx = competencies.findIndex((x) => (c.id && x.id === c.id) || (code && (x.skill?.skill_code === code || x.skill_code === code)) || (x.skill?.id || x.skill_id) === skillId)
+    const payload = {
+      id: (typeof c.id === 'number' && c.id < 1000000000) ? c.id : null,
+      employee: empId, skill: skillId, skill_id: skillId, skill_code: code, skill_name: c.skill_name || c.skill?.name,
+      dimension: c.dimension || c.skill?.dimension, self_assessed_rating: c.self_assessed_rating, validation_status: 'PENDING',
+      manager_feedback: c.manager_feedback || '', project_evidence: (c.project_evidence || []).map((p) => (typeof p === 'object' ? p.id : p))
+    }
     try {
-      const saved = await submitCompetencyRatingApi({ employee: empId, skill: c.skill_id, self_assessed_rating: c.self_assessed_rating, validation_status: 'PENDING' })
-      const merged = { ...c, ...saved, skill: saved.skill || c.skill }
+      const saved = await submitCompetencyRatingApi(payload)
+      const merged = { ...c, ...saved, skill: saved?.skill || c.skill }
       const list = [...competencies]
-      if (idx >= 0) list[idx] = merged
-      else list.unshift(merged)
+      if (idx >= 0) list[idx] = merged; else list.unshift(merged)
       setCompetencies(list)
     } catch {
       const list = [...competencies]
-      if (idx >= 0) list[idx] = { ...list[idx], ...c }
-      else list.unshift(c)
+      if (idx >= 0) list[idx] = { ...list[idx], ...c }; else list.unshift(c)
       setCompetencies(list)
     }
-    notify(`Rating for ${c.skill.name} submitted for manager review.`)
+    notify(`Rating for ${c.skill?.name || c.skill_name || 'Skill'} submitted for manager review.`)
   }
 
   const handleBulkAddRatings = async (newRatingsList) => {
@@ -125,14 +123,17 @@ export default function App() {
     const updated = [...competencies]
     for (const item of newRatingsList) {
       const idx = updated.findIndex((x) => (x.skill?.id || x.skill_id) === item.skill_id)
-      if (idx >= 0) updated[idx] = { ...updated[idx], ...item }
-      else updated.unshift(item)
+      if (idx >= 0) updated[idx] = { ...updated[idx], ...item }; else updated.unshift(item)
     }
     setCompetencies(updated)
     notify(`Batch added ${newRatingsList.length} skills!`)
     for (const item of newRatingsList) {
       try {
-        await submitCompetencyRatingApi({ employee: empId, skill: item.skill_id, self_assessed_rating: item.self_assessed_rating, validation_status: 'PENDING' })
+        await submitCompetencyRatingApi({
+          employee: empId, skill: item.skill_id, skill_id: item.skill_id,
+          skill_code: item.skill_code || item.skill?.skill_code, skill_name: item.skill_name || item.skill?.name,
+          dimension: item.dimension || item.skill?.dimension, self_assessed_rating: item.self_assessed_rating, validation_status: 'PENDING'
+        })
       } catch {}
     }
   }
@@ -163,14 +164,14 @@ export default function App() {
     <div className="app-container">
       <Sidebar
         currentTab={currentTab} setCurrentTab={setCurrentTab} profile={profile} user={user}
-        projectsCount={projects.length} competenciesCount={competencies.length} actionRequiredCount={actionRequiredCount} pendingCount={pendingCount} onLogout={handleLogout}
+        projectsCount={projects.length} competenciesCount={competencies.length} actionRequiredCount={actionRequiredCount} pendingCount={pendingCount} onOpenRoadmap={() => setRoadmapOpen(true)} onLogout={handleLogout}
       />
       <main className="main-content">
         <TopNavbar currentTab={currentTab} department={profile.department} needsProjectUpdate={profile?.needs_project_update} onNavigate={setCurrentTab} onOpenRoadmap={() => setRoadmapOpen(true)} onLogout={handleLogout} />
         <div className="scroll-body">
           {feedbackMsg && <div className="alert alert-success"><span>✅</span><span>{feedbackMsg}</span></div>}
           {currentTab === 'validation-status' && <ValidationStatus competencies={competencies} projects={projects} onAddOrUpdateRating={handleAddOrUpdateRating} onNavigate={setCurrentTab} />}
-          {currentTab === 'overview' && <ProfileOverview profile={profile} projects={projects} competencies={competencies} onSaveProfile={handleSaveProfile} onNavigate={setCurrentTab} />}
+          {currentTab === 'overview' && <ProfileOverview profile={profile} projects={projects} competencies={competencies} onSaveProfile={handleSaveProfile} onNavigate={setCurrentTab} onCompleteReminder={handleCompleteReminder} />}
           {currentTab === 'profile-setup' && <ProfileSetup profile={profile} onSaveProfile={handleSaveProfile} onNavigate={setCurrentTab} />}
           {currentTab === 'resume-upload' && <ResumeUpload onImportExtractedData={handleImportExtractedData} />}
           {currentTab === 'projects' && <ProjectsManager projects={projects} onAddProject={handleAddProject} onUpdateProject={handleUpdateProject} onDeleteProject={handleDeleteProject} />}

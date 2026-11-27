@@ -34,7 +34,6 @@ def send_employee_feedback(request, employee_id):
         profile = get_object_or_404(EmployeeProfile, employee_id=str(employee_id))
 
     data = parse_feedback_data(request)
-
     feedback_text = data.get('feedback_text') or data.get('admin_feedback') or ''
     profile.admin_feedback = feedback_text.strip() if feedback_text else ''
 
@@ -45,7 +44,14 @@ def send_employee_feedback(request, employee_id):
         if needs_update:
             profile.project_reminder_sent_at = timezone.now()
 
-    if 'is_profile_complete' in data:
+    if 'reminder_status' in data:
+        profile.reminder_status = data.get('reminder_status')
+    elif 'needs_project_update' in data:
+        profile.reminder_status = 'ACTION_REQUIRED' if profile.needs_project_update else 'NONE'
+
+    if 'profile_status' in data:
+        profile.is_profile_complete = (data.get('profile_status') == 'complete')
+    elif 'is_profile_complete' in data:
         val = data.get('is_profile_complete')
         is_complete = str(val).lower() in ['true', '1', 'on', 'yes'] if isinstance(val, (str, int)) else bool(val)
         profile.is_profile_complete = is_complete
@@ -58,6 +64,98 @@ def send_employee_feedback(request, employee_id):
         return JsonResponse({
             'status': 'success',
             'message': f'Feedback updated for {emp_name}.',
+            'profile': EmployeeProfileSerializer(profile).data
+        })
+    return redirect('/dashboard/?tab=admin-employees')
+
+@csrf_exempt
+def toggle_profile_completeness(request, employee_id):
+    """Admin 1-click toggle between Complete and Incomplete"""
+    if request.user.is_authenticated and not (request.user.is_staff or request.user.is_superuser):
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
+    profile = EmployeeProfile.objects.filter(id=employee_id).first()
+    if not profile:
+        profile = get_object_or_404(EmployeeProfile, employee_id=str(employee_id))
+    profile.is_profile_complete = not profile.is_profile_complete
+    profile.save()
+    return JsonResponse({
+        'status': 'success',
+        'is_profile_complete': profile.is_profile_complete,
+        'label': 'Complete' if profile.is_profile_complete else 'Incomplete'
+    })
+
+@csrf_exempt
+def employee_complete_reminder(request, employee_id=None):
+    """
+    Marks an active reminder as completed by the employee.
+    Sets reminder_status='COMPLETED_BY_EMPLOYEE'.
+    """
+    if request.method not in ['POST', 'PUT', 'PATCH', 'GET']:
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    profile = None
+    if employee_id:
+        profile = EmployeeProfile.objects.filter(id=employee_id).first() or \
+                  EmployeeProfile.objects.filter(employee_id=str(employee_id)).first()
+    if not profile and request.user.is_authenticated:
+        profile = EmployeeProfile.objects.filter(user=request.user).first()
+    if not profile:
+        data = parse_feedback_data(request)
+        emp_val = data.get('employee_id') or data.get('employee')
+        if emp_val:
+            profile = EmployeeProfile.objects.filter(id=emp_val).first() or \
+                      EmployeeProfile.objects.filter(employee_id=str(emp_val)).first()
+
+    if not profile:
+        if is_api_request(request):
+            return JsonResponse({'error': 'Employee profile not found.'}, status=404)
+        return redirect('dashboard')
+
+    profile.reminder_status = 'COMPLETED_BY_EMPLOYEE'
+    profile.save()
+
+    emp_name = profile.user.get_full_name() or profile.user.username
+    msg = f'Reminder marked as completed for {emp_name}.'
+    messages.success(request, msg)
+
+    if is_api_request(request) or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'message': msg,
+            'reminder_status': profile.reminder_status,
+            'profile': EmployeeProfileSerializer(profile).data
+        })
+    return redirect('dashboard')
+
+@csrf_exempt
+def withdraw_employee_reminder(request, employee_id):
+    """
+    Admin action to withdraw an employee notification/reminder.
+    Resets reminder_status='NONE' and needs_project_update=False.
+    """
+    if request.user.is_authenticated and not (request.user.is_staff or request.user.is_superuser):
+        if is_api_request(request):
+            return JsonResponse({'error': 'Unauthorized: Admin access required.'}, status=403)
+        messages.error(request, 'Unauthorized: Admin access required.')
+        return redirect('admin_login')
+
+    profile = EmployeeProfile.objects.filter(id=employee_id).first()
+    if not profile:
+        profile = get_object_or_404(EmployeeProfile, employee_id=str(employee_id))
+
+    profile.reminder_status = 'NONE'
+    profile.needs_project_update = False
+    profile.save()
+
+    emp_name = profile.user.get_full_name() or profile.user.username
+    msg = f'Notification withdrawn for {emp_name}.'
+    messages.success(request, msg)
+
+    if is_api_request(request) or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'message': msg,
+            'reminder_status': profile.reminder_status,
             'profile': EmployeeProfileSerializer(profile).data
         })
     return redirect('/dashboard/?tab=admin-employees')

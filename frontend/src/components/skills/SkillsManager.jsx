@@ -51,6 +51,9 @@ export default function SkillsManager({
       id: editingCompetency ? editingCompetency.id : Date.now(),
       skill: selectedSkill,
       skill_id: selectedSkill.id,
+      skill_code: selectedSkill.skill_code,
+      skill_name: selectedSkill.name,
+      dimension: selectedSkill.dimension,
       self_assessed_rating: rating,
       approved_rating: editingCompetency ? editingCompetency.approved_rating : null,
       validation_status: 'PENDING',
@@ -72,7 +75,7 @@ export default function SkillsManager({
             <button onClick={() => setBulkModalOpen(true)} className="btn btn-secondary btn-sm" style={{ fontWeight: '600' }}>
               ⚡ Quick Batch Add / Paste
             </button>
-            <button onClick={openAddModal} className="btn btn-primary btn-sm">
+            <button onClick={openAddModal} className="btn btn-primary btn-sm" style={activeDimension === 'FUNCTIONAL' ? { background: '#ea580c', borderColor: '#ea580c' } : {}}>
               + Rate Single Skill
             </button>
           </div>
@@ -84,32 +87,32 @@ export default function SkillsManager({
 
           <div style={{ display: 'flex', gap: '8px', borderBottom: '2px solid #e2e8f0', marginBottom: '20px' }}>
             {[
-              { key: 'TECHNICAL', label: 'Technical Skills', icon: '⚙️' },
-              { key: 'DOMAIN', label: 'Domain Competencies', icon: '🌐' },
-              { key: 'FUNCTIONAL', label: 'Functional Roles', icon: '🧩' },
+              { key: 'TECHNICAL', label: 'Technical Skills', icon: '⚙️', color: '#2563eb' },
+              { key: 'DOMAIN', label: 'Domain Competencies', icon: '🌐', color: '#c026d3' },
+              { key: 'FUNCTIONAL', label: 'Functional Roles', icon: '🧩', color: '#ea580c' },
             ].map((tab) => (
               <button
                 key={tab.key}
                 type="button"
                 onClick={() => setActiveDimension(tab.key)}
                 style={{
-                  padding: '10px 18px',
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: activeDimension === tab.key ? '2px solid #2563eb' : '2px solid transparent',
-                  marginBottom: '-2px',
-                  fontWeight: activeDimension === tab.key ? '700' : '500',
-                  color: activeDimension === tab.key ? '#2563eb' : '#64748b',
-                  fontSize: '13.5px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
+                  padding: '10px 18px', background: 'none', border: 'none',
+                  borderBottom: activeDimension === tab.key ? `2px solid ${tab.color}` : '2px solid transparent',
+                  marginBottom: '-2px', fontWeight: activeDimension === tab.key ? '700' : '500',
+                  color: activeDimension === tab.key ? tab.color : '#64748b', fontSize: '13.5px',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px'
                 }}
               >
                 <span>{tab.icon}</span>
                 <span>{tab.label}</span>
-                <span className="badge badge-rating">
+                <span
+                  style={{
+                    display: 'inline-block', padding: '2px 7px', borderRadius: '99px', fontSize: '11px', fontWeight: '700',
+                    background: tab.key === 'FUNCTIONAL' ? '#fff7ed' : tab.key === 'DOMAIN' ? '#fdf4ff' : '#eff6ff',
+                    color: tab.key === 'FUNCTIONAL' ? '#ea580c' : tab.key === 'DOMAIN' ? '#c026d3' : '#1d4ed8',
+                    border: tab.key === 'FUNCTIONAL' ? '1px solid #fed7aa' : tab.key === 'DOMAIN' ? '1px solid #f5d0fe' : '1px solid #bfdbfe'
+                  }}
+                >
                   {competencies.filter((c) => (c.skill?.dimension || c.dimension) === tab.key).length}
                 </span>
               </button>
@@ -151,7 +154,7 @@ export default function SkillsManager({
               <p style={{ fontSize: '13px', marginBottom: '14px' }}>
                 Select from the standard {activeDimension.toLowerCase()} taxonomy to submit your self-assessment.
               </p>
-              <button onClick={openAddModal} className="btn btn-primary btn-sm">
+              <button onClick={openAddModal} className="btn btn-primary btn-sm" style={activeDimension === 'FUNCTIONAL' ? { background: '#ea580c', borderColor: '#ea580c' } : {}}>
                 + Rate {activeDimension} Skill
               </button>
             </div>

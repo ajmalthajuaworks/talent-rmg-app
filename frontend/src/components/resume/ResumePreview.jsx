@@ -130,7 +130,7 @@ export default function ResumePreview({ profile, projects, competencies }) {
             <SectionTitle title="Demonstrated Functional Responsibilities" />
             <div>
               {functionalSkills.map((c, i) => (
-                <SkillPill key={i} name={c.skill?.name || c.skill_name} bg="#f0fdf4" color="#15803d" />
+                <SkillPill key={i} name={c.skill?.name || c.skill_name} bg="#fff7ed" color="#ea580c" />
               ))}
             </div>
           </div>

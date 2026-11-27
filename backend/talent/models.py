@@ -26,6 +26,12 @@ VALIDATION_STATUS_CHOICES = [
     ('REVISED', 'Revised by Manager'),
 ]
 
+REMINDER_STATUS_CHOICES = [
+    ('NONE', 'None'),
+    ('ACTION_REQUIRED', 'Action Required'),
+    ('COMPLETED_BY_EMPLOYEE', 'Completed by Employee'),
+]
+
 
 # --- MODELS ---
 
@@ -52,6 +58,7 @@ class EmployeeProfile(models.Model):
     admin_feedback = models.TextField(blank=True, null=True)
     needs_project_update = models.BooleanField(default=False)
     project_reminder_sent_at = models.DateTimeField(null=True, blank=True)
+    reminder_status = models.CharField(max_length=30, choices=REMINDER_STATUS_CHOICES, default='NONE')
     
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - {self.employee_id}"

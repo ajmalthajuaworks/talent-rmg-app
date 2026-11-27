@@ -7,6 +7,7 @@ export default function Sidebar({
   competenciesCount,
   actionRequiredCount = 2,
   pendingCount = 0,
+  onOpenRoadmap,
   onLogout
 }) {
   const avatarLetter = (profile?.user?.first_name || user?.username || 'A')[0].toUpperCase()
@@ -65,6 +66,12 @@ export default function Sidebar({
       <button className={`nav-item ${currentTab === 'resume' ? 'active' : ''}`} onClick={() => setCurrentTab('resume')}>
         <span>📄</span> Generate Resume
       </button>
+
+      {onOpenRoadmap && (
+        <button className="nav-item" onClick={onOpenRoadmap} style={{ marginTop: '4px', color: '#3b82f6', fontWeight: '600' }}>
+          <span>📅</span> 4-Week Roadmap
+        </button>
+      )}
 
       {/* Sidebar Footer */}
       <div className="sidebar-user">

@@ -134,13 +134,17 @@ export default function ValidationStatus({ competencies, projects, onAddOrUpdate
                 const isRejected = c.validation_status === 'REJECTED'
                 const isRevised = c.validation_status === 'REVISED'
                 const isDomain = (c.skill?.dimension || c.dimension) === 'DOMAIN'
+                const isFunctional = (c.skill?.dimension || c.dimension) === 'FUNCTIONAL'
+                const dimBg = isFunctional ? '#fff7ed' : isDomain ? '#fdf4ff' : '#f0f9ff'
+                const dimColor = isFunctional ? '#ea580c' : isDomain ? '#c026d3' : '#0284c7'
+                const dimBorder = isFunctional ? '1px solid #fed7aa' : isDomain ? '1px solid #f5d0fe' : '1px solid #bae6fd'
                 return (
                   <tr key={c.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={{ padding: '14px', fontWeight: '800', fontSize: '13.5px', color: '#0f172a' }}>
                       {c.skill?.name || c.skill_name}
                     </td>
                     <td style={{ padding: '14px' }}>
-                      <span style={{ background: isDomain ? '#fdf4ff' : '#f0f9ff', color: isDomain ? '#c026d3' : '#0284c7', padding: '3px 8px', borderRadius: '6px', fontSize: '10.5px', fontWeight: '700' }}>
+                      <span style={{ background: dimBg, color: dimColor, border: dimBorder, padding: '3px 8px', borderRadius: '6px', fontSize: '10.5px', fontWeight: '700' }}>
                         {c.skill?.dimension || c.dimension || 'TECHNICAL'}
                       </span>
                     </td>

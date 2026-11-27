@@ -32,6 +32,7 @@ export default function EvidenceActionModal({ isOpen, onClose, comp, mode, proje
 
     const updated = {
       ...comp,
+      skill_id: comp.skill_id || comp.skill?.id,
       self_assessed_rating: isResubmit ? rating : comp.self_assessed_rating,
       validation_status: 'PENDING',
       manager_feedback: notes ? `Resubmitted: ${notes}` : 'Resubmitted with updated details.',

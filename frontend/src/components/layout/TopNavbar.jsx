@@ -40,6 +40,7 @@ export default function TopNavbar({
     <header className="top-navbar no-print">
       <h1>{getTabHeading()}</h1>
       <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        
         <span style={{ background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '6px 12px', borderRadius: '99px', fontSize: '12.5px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span>🔔</span> Profile update due in <strong style={{ fontWeight: '800' }}>12 days</strong>
         </span>

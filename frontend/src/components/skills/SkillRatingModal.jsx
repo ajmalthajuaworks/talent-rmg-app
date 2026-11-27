@@ -40,7 +40,7 @@ export default function SkillRatingModal({
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const selectedSkill = availableTaxonomy.find((s) => s.id === parseInt(formSkillId)) || {
+    const selectedSkill = availableTaxonomy.find((s) => s.id === parseInt(formSkillId)) || (editingCompetency?.skill) || {
       id: parseInt(formSkillId),
       name: 'Custom Skill',
       skill_code: 'CUST-001',
@@ -146,7 +146,7 @@ export default function SkillRatingModal({
                 <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '10px 12px', marginTop: '10px', fontSize: '12.5px', color: '#92400e', display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
                   <span style={{ fontSize: '16px' }}>⚠️</span>
                   <div>
-                    <strong>Evidence Notice (ENG-O10):</strong> <strong>{formRating}</strong> ratings require at least one linked project experience for manager validation.
+                    <strong>Evidence Notice :</strong> <strong>{formRating}</strong> ratings require at least one linked project experience for manager validation.
                   </div>
                 </div>
               )}

@@ -37,32 +37,27 @@ export const DEFAULT_SKILL_TAXONOMY = [
   { id: 31, name: 'Technical Program Manager', skill_code: 'FUN-TP-001', dimension: 'FUNCTIONAL', description: 'Cross-project delivery, milestone tracking & governance' },
 ]
 
-export const INITIAL_DEMO_PROJECTS = []
+export { INITIAL_DEMO_PROJECTS } from './demoProjects'
 export const INITIAL_DEMO_COMPETENCIES = [
   {
     id: 101, skill: { id: 1, name: 'Python', skill_code: 'TEC-PY-001', dimension: 'TECHNICAL' },
-    skill_id: 1, self_assessed_rating: 'ADVANCED', approved_rating: 'ADVANCED',
-    validation_status: 'APPROVED', manager_feedback: 'Strong evidence across 3 projects.'
+    skill_id: 1, self_assessed_rating: 'BEGINNER', approved_rating: 'BEGINNER',
+    validation_status: 'APPROVED', manager_feedback: 'Demonstrated core Python syntax and basic scripting.'
   },
   {
-    id: 102, skill: { id: 10, name: 'Kubernetes', skill_code: 'TEC-K8-001', dimension: 'TECHNICAL' },
-    skill_id: 10, self_assessed_rating: 'EXPERT', approved_rating: 'ADVANCED',
-    validation_status: 'REJECTED', manager_feedback: 'Evidence does not meet Expert level. Resubmit as Advanced with additional deployment ownership evidence.'
+    id: 102, skill: { id: 18, name: 'Git & Version Control', skill_code: 'TEC-GT-001', dimension: 'TECHNICAL' },
+    skill_id: 18, self_assessed_rating: 'BEGINNER', approved_rating: 'BEGINNER',
+    validation_status: 'APPROVED', manager_feedback: 'Understands clone, branch, commit, and PR workflows.'
   },
   {
-    id: 103, skill: { id: 13, name: 'Azure DevOps', skill_code: 'TEC-AZ-001', dimension: 'TECHNICAL' },
-    skill_id: 13, self_assessed_rating: 'INTERMEDIATE', approved_rating: 'BEGINNER',
-    validation_status: 'REVISED', manager_feedback: 'Limited independent pipeline ownership. Revised to Beginner.'
+    id: 103, skill: { id: 17, name: 'Linux & Bash Scripting', skill_code: 'TEC-LX-001', dimension: 'TECHNICAL' },
+    skill_id: 17, self_assessed_rating: 'TRAINED', approved_rating: null,
+    validation_status: 'PENDING', manager_feedback: 'Completed Linux fundamentals training module.'
   },
   {
-    id: 104, skill: { id: 4, name: 'React.js', skill_code: 'TEC-RC-001', dimension: 'TECHNICAL' },
-    skill_id: 4, self_assessed_rating: 'INTERMEDIATE', approved_rating: null,
-    validation_status: 'PENDING', manager_feedback: 'Submitted 5 days ago.'
-  },
-  {
-    id: 105, skill: { id: 19, name: 'Healthcare & LS', skill_code: 'DOM-HC-001', dimension: 'DOMAIN' },
-    skill_id: 19, self_assessed_rating: 'ADVANCED', approved_rating: 'ADVANCED',
-    validation_status: 'APPROVED', manager_feedback: 'Verified against 2 projects.'
+    id: 104, skill: { id: 26, name: 'Individual Contributor', skill_code: 'FUN-IC-001', dimension: 'FUNCTIONAL' },
+    skill_id: 26, self_assessed_rating: 'BEGINNER', approved_rating: 'BEGINNER',
+    validation_status: 'APPROVED', manager_feedback: 'Executes assigned development tasks under guidance.'
   }
 ]
 

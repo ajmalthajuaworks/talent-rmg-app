@@ -77,6 +77,9 @@
     .badge-pending { background: #fef9c3; color: #a16207; }
     .badge-rejected { background: #fee2e2; color: #b91c1c; }
     .badge-rating { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-tech { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-domain { background: #fdf4ff; color: #c026d3; border: 1px solid #f5d0fe; }
+    .badge-functional { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 12.5px; font-weight: 600; color: #334155; margin-bottom: 5px; }
@@ -261,19 +264,24 @@
                         {% if emp.needs_project_update %}
                           <span class="badge" style="background:#fef3c7;color:#b45309;">⚠️ Needs Project Update</span>
                         {% endif %}
-                        {% if not emp.is_profile_complete %}
-                          <span class="badge badge-rejected">Incomplete</span>
-                        {% else %}
-                          <span class="badge badge-approved">Complete</span>
-                        {% endif %}
+                        <button type="button" class="badge {% if emp.is_profile_complete %}badge-approved{% else %}badge-rejected{% endif %}" style="cursor:pointer; border:none; transition:transform 0.15s;" onclick="toggleEmployeeComplete('{{ emp.id }}', this)" title="Click to toggle Complete / Incomplete">
+                          {% if emp.is_profile_complete %}✓ Complete{% else %}✕ Incomplete{% endif %}
+                        </button>
                         {% if emp.admin_feedback %}
                           <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">💬 Has Note</div>
                         {% endif %}
                       </td>
                       <td>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openFeedbackModal('{{ emp.id }}', '{{ emp.user.get_full_name|default:emp.user.username|escapejs }}', '{{ emp.employee_id|escapejs }}', {{ emp.is_profile_complete|yesno:'true,false' }}, {{ emp.needs_project_update|yesno:'true,false' }}, '{{ emp.admin_feedback|default:''|escapejs }}')">
-                          📝 Feedback / Reminder
-                        </button>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                          <button type="button" class="btn btn-secondary btn-sm" onclick="openFeedbackModal('{{ emp.id }}', '{{ emp.user.get_full_name|default:emp.user.username|escapejs }}', '{{ emp.employee_id|escapejs }}', {{ emp.is_profile_complete|yesno:'true,false' }}, {{ emp.needs_project_update|yesno:'true,false' }}, '{{ emp.admin_feedback|default:''|escapejs }}')">
+                            📝 Feedback / Reminder
+                          </button>
+                          {% if emp.reminder_status != 'NONE' or emp.needs_project_update %}
+                            <a href="{% url 'withdraw_employee_reminder' emp.id %}" class="btn btn-secondary btn-sm" style="font-size:11px;padding:5px 8px;" title="Withdraw reminder notice">
+                              Withdraw
+                            </a>
+                          {% endif %}
+                        </div>
                       </td>
                     </tr>
                   {% endfor %}
@@ -311,7 +319,7 @@
                         <td><strong>{{ c.employee.user.get_full_name|default:c.employee.user.username }}</strong></td>
                         <td><code>{{ c.skill.skill_code }}</code></td>
                         <td>{{ c.skill.name }}</td>
-                        <td>{{ c.skill.dimension }}</td>
+                        <td>{% if c.skill.dimension == 'FUNCTIONAL' %}<span class="badge badge-functional">FUNCTIONAL</span>{% elif c.skill.dimension == 'DOMAIN' %}<span class="badge badge-domain">DOMAIN</span>{% else %}<span class="badge badge-tech">TECHNICAL</span>{% endif %}</td>
                         <td><span class="badge badge-rating">{{ c.self_assessed_rating }}</span></td>
                         <td>
                           <a href="{% url 'competency_validate' c.id %}?action=approve" class="btn btn-success btn-sm">✓ Approve</a>
@@ -420,7 +428,7 @@
                     <tr>
                       <td><code>{{ s.skill_code }}</code></td>
                       <td><strong>{{ s.name }}</strong></td>
-                      <td><span class="badge badge-rating">{{ s.dimension }}</span></td>
+                      <td>{% if s.dimension == 'FUNCTIONAL' %}<span class="badge badge-functional">FUNCTIONAL</span>{% elif s.dimension == 'DOMAIN' %}<span class="badge badge-domain">DOMAIN</span>{% else %}<span class="badge badge-tech">TECHNICAL</span>{% endif %}</td>
                       <td style="color:var(--text-muted);font-size:12.5px;">{{ s.description }}</td>
                     </tr>
                   {% endfor %}
@@ -545,12 +553,40 @@
       }
     });
 
+    // Instant 1-Click Toggle from Table
+    async function toggleEmployeeComplete(empId, btn) {
+      btn.style.opacity = '0.5';
+      try {
+        const res = await fetch(`/api/talent/employees/${empId}/toggle-complete/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          if (data.is_profile_complete) {
+            btn.className = 'badge badge-approved';
+            btn.innerText = '✓ Complete';
+          } else {
+            btn.className = 'badge badge-rejected';
+            btn.innerText = '✕ Incomplete';
+          }
+        }
+      } catch (err) {
+        console.error('Failed to toggle:', err);
+      } finally {
+        btn.style.opacity = '1';
+      }
+    }
+
     // Modal helpers for Employee Feedback & Reminders
     function openFeedbackModal(empId, name, code, isComplete, needsUpdate, feedback) {
       document.getElementById('fbEmpName').innerText = name;
       document.getElementById('fbEmpId').innerText = code;
       document.getElementById('employeeFeedbackForm').action = '/employees/' + empId + '/feedback/';
-      document.getElementById('fbIsProfileComplete').checked = !isComplete;
+      document.getElementById('fbProfileStatus').value = isComplete ? 'complete' : 'incomplete';
       document.getElementById('fbNeedsProjectUpdate').checked = needsUpdate;
       document.getElementById('fbAdminFeedback').value = feedback || '';
       document.getElementById('employeeFeedbackModal').classList.add('active');
@@ -596,10 +632,13 @@
             Target: <strong id="fbEmpName"></strong> (<code id="fbEmpId"></code>)
           </p>
           <div style="background:#f8fafc;padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:14px;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-bottom:8px;cursor:pointer;">
-              <input type="checkbox" id="fbIsProfileComplete" name="is_profile_complete" value="false">
-              <span>Flag Profile Incomplete (Requires engineer attention)</span>
-            </label>
+            <div class="form-group" style="margin-bottom:12px;">
+              <label style="font-weight:600;font-size:12.5px;color:#334155;display:block;margin-bottom:4px;">Profile Status:</label>
+              <select class="form-control" id="fbProfileStatus" name="profile_status">
+                <option value="incomplete">✕ Incomplete (Requires engineer attention)</option>
+                <option value="complete">✓ Complete (Ready for RMG / Customer)</option>
+              </select>
+            </div>
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;cursor:pointer;color:#b45309;">
               <input type="checkbox" id="fbNeedsProjectUpdate" name="needs_project_update" value="true">
               <span>⚠️ Project Update Reminder Required (Displays alert in engineer portal)</span>

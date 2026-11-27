@@ -149,7 +149,11 @@ export default function ExtractedPreview({ extractionResult, imported, onImport 
                     </td>
                     <td><code>{s.code}</code></td>
                     <td><strong>{s.name}</strong></td>
-                    <td><span className="badge badge-rating">{s.dimension}</span></td>
+                    <td>
+                      <span className={`badge ${s.dimension === 'FUNCTIONAL' ? 'badge-functional' : s.dimension === 'DOMAIN' ? 'badge-domain' : 'badge-tech'}`}>
+                        {s.dimension}
+                      </span>
+                    </td>
                     <td><span className="badge badge-approved">{s.suggestedRating}</span></td>
                     <td><span style={{ color: '#16a34a', fontWeight: '700' }}>{s.confidence}</span></td>
                     <td>

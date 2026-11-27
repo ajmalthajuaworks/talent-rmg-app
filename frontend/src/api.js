@@ -1,4 +1,5 @@
 // api.js — Central API service for TalentRMG React Frontend
+import { simulateResumeExtraction } from './data/initialData'
 
 async function request(endpoint, options = {}) {
   const isForm = options.body instanceof FormData
@@ -63,6 +64,11 @@ export async function updateProfileApi(data) {
   })
 }
 
+export async function completeReminderApi(employeeId) {
+  const url = employeeId ? `/employees/${employeeId}/complete-reminder/` : '/profile/complete-reminder/'
+  return request(url, { method: 'POST' })
+}
+
 // ── Projects APIs (Add, Edit, Delete, View) ──────────────────────────────────
 export async function getProjectsApi(employeeId) {
   const query = employeeId ? `?employee=${employeeId}` : ''
@@ -81,9 +87,9 @@ export async function updateProjectApi(projectId, projectData) {
   return request(`/experiences/${projectId}/`, { method: 'PATCH', body: JSON.stringify(projectData) })
 }
 
-export async function deleteProjectApi(projectId) {
+export async function deleteProjectApi(projectId, employeeId) {
   try {
-    return await request(`/projects/${projectId}/delete/`, { method: 'POST' })
+    return await request(`/projects/${projectId}/delete/`, { method: 'POST', body: JSON.stringify({ employee: employeeId }) })
   } catch {
     return await request(`/experiences/${projectId}/`, { method: 'DELETE' })
   }
@@ -104,6 +110,9 @@ export async function submitCompetencyRatingApi(data) {
   try {
     return await request('/skills/add/', { method: 'POST', body: JSON.stringify(data) })
   } catch {
+    if (data.id && typeof data.id === 'number' && data.id < 1000000000) {
+      try { return await request(`/competencies/${data.id}/`, { method: 'PATCH', body: JSON.stringify(data) }) } catch {}
+    }
     return await request('/competencies/', { method: 'POST', body: JSON.stringify(data) })
   }
 }

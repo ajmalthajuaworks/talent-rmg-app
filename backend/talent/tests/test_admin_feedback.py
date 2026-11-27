@@ -31,8 +31,32 @@ class AdminFeedbackAndReviewTests(TestCase):
         self.profile.refresh_from_db()
         self.assertEqual(self.profile.admin_feedback, 'Please update project latency numbers.')
         self.assertTrue(self.profile.needs_project_update)
+        self.assertEqual(self.profile.reminder_status, 'ACTION_REQUIRED')
         self.assertIsNotNone(self.profile.project_reminder_sent_at)
         self.assertFalse(self.profile.is_profile_complete)
+
+    def test_employee_complete_reminder_endpoint(self):
+        self.profile.reminder_status = 'ACTION_REQUIRED'
+        self.profile.needs_project_update = True
+        self.profile.save()
+        self.client.force_login(self.engineer_user)
+        url = reverse('employee_complete_reminder')
+        res = self.client.post(url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res.status_code, 200)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.reminder_status, 'COMPLETED_BY_EMPLOYEE')
+
+    def test_withdraw_employee_reminder_endpoint(self):
+        self.profile.reminder_status = 'ACTION_REQUIRED'
+        self.profile.needs_project_update = True
+        self.profile.save()
+        self.client.force_login(self.admin_user)
+        url = reverse('withdraw_employee_reminder', kwargs={'employee_id': self.profile.id})
+        res = self.client.post(url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res.status_code, 200)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.reminder_status, 'NONE')
+        self.assertFalse(self.profile.needs_project_update)
 
     def test_competency_validate_with_manager_notes_and_rating(self):
         self.client.force_login(self.admin_user)
@@ -60,3 +84,35 @@ class AdminFeedbackAndReviewTests(TestCase):
         self.comp.refresh_from_db()
         self.assertEqual(self.comp.validation_status, 'REVISED')
         self.assertEqual(self.comp.approved_rating, 'BEGINNER')
+
+    def test_toggle_profile_completeness_endpoint(self):
+        self.client.force_login(self.admin_user)
+        self.profile.is_profile_complete = False
+        self.profile.save()
+        url = reverse('toggle_profile_completeness', kwargs={'employee_id': self.profile.id})
+        res = self.client.post(url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res.status_code, 200)
+        data = res.json()
+        self.assertEqual(data['status'], 'success')
+        self.assertTrue(data['is_profile_complete'])
+        self.profile.refresh_from_db()
+        self.assertTrue(self.profile.is_profile_complete)
+
+        # Toggle again -> False
+        res2 = self.client.post(url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(res2.status_code, 200)
+        data2 = res2.json()
+        self.assertFalse(data2['is_profile_complete'])
+        self.profile.refresh_from_db()
+        self.assertFalse(self.profile.is_profile_complete)
+
+    def test_send_employee_feedback_with_profile_status(self):
+        self.client.force_login(self.admin_user)
+        url = reverse('send_employee_feedback', kwargs={'employee_id': self.profile.id})
+        self.client.post(url, {'profile_status': 'complete'}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.profile.refresh_from_db()
+        self.assertTrue(self.profile.is_profile_complete)
+
+        self.client.post(url, {'profile_status': 'incomplete'}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.profile.refresh_from_db()
+        self.assertFalse(self.profile.is_profile_complete)

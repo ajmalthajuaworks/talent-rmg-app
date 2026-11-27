@@ -1,66 +1,115 @@
-export default function ProjectCard({ project, onEdit, onDelete }) {
+export default function ProjectCard({ project, onEdit, onMapSkills, onDelete, isLast }) {
+  const isCurrent = project.is_current || !project.end_date || project.end_date.toLowerCase() === 'present'
+
+  const formatDates = () => {
+    if (project.date_display) return project.date_display
+    if (!project.start_date) return ''
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const s = new Date(project.start_date)
+    const e = isCurrent ? new Date() : new Date(project.end_date)
+    const sStr = isNaN(s.getTime()) ? project.start_date : `${months[s.getMonth()]} ${s.getFullYear()}`
+    const eStr = isCurrent ? 'Present' : (isNaN(e.getTime()) ? project.end_date : `${months[e.getMonth()]} ${e.getFullYear()}`)
+    let m = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth())
+    if (m < 0) m = 0
+    const yrs = Math.floor(m / 12)
+    const mos = m % 12
+    let dur = yrs > 0 ? `${yrs} yr${yrs > 1 ? 's' : ''} ` : ''
+    dur += mos > 0 || yrs === 0 ? `${mos} mo${mos !== 1 ? 's' : ''}` : ''
+    return `${sStr} – ${eStr} · ${dur.trim()}`
+  }
+
+  const techList = (project.technology_stack || '').split(',').map((t) => t.trim()).filter(Boolean)
+  const isMissingResponsibilities = !project.individual_responsibilities || project.individual_responsibilities.trim() === ''
+  const isValidated = project.validation_status === 'APPROVED' || project.validation_status === 'VALIDATED'
+  const desc = project.business_problem || project.description || project.individual_responsibilities
+
+  const btnStyle = {
+    background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px',
+    padding: '4px 12px', fontSize: '12px', fontWeight: '600', color: '#334155',
+    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px'
+  }
+
   return (
-    <div
-      style={{
-        border: '1px solid #e2e8f0',
-        borderRadius: '12px',
-        padding: '20px',
-        background: '#ffffff',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#0f172a' }}>{project.project_name}</h3>
-            {!project.end_date && <span className="badge badge-approved">Current Engagement</span>}
-          </div>
-          <div style={{ fontSize: '12.5px', color: '#64748b', marginTop: '4px' }}>
-            <strong>{project.customer_or_employer}</strong> · {project.industry} · {project.start_date} to {project.end_date || 'Present'}
-          </div>
+    <div style={{ paddingTop: '18px', paddingBottom: '20px', borderBottom: isLast ? 'none' : '1px solid #f1f5f9' }}>
+      {/* Row 1: Bullseye Bullet + Title + Current Badge */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', borderRadius: '50%', border: '2px solid #2563eb', flexShrink: 0 }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }} />
+          </span>
+          <h3 style={{ fontSize: '15.5px', fontWeight: '800', color: '#0f172a', margin: 0 }}>{project.project_name}</h3>
         </div>
+        {isCurrent && (
+          <span style={{ background: '#eff6ff', color: '#2563eb', padding: '3px 9px', borderRadius: '6px', fontSize: '11px', fontWeight: '800', letterSpacing: '0.4px' }}>
+            CURRENT
+          </span>
+        )}
+      </div>
+
+      {/* Row 2: Subtitle */}
+      <div style={{ fontSize: '13px', color: '#64748b', marginTop: '3px', marginBottom: '8px', paddingLeft: '27px' }}>
+        <span>{project.customer_or_employer}</span>
+        {project.industry && <span> · {project.industry}</span>}
+        <span> · {formatDates()}</span>
+      </div>
+
+      {/* Row 3: Description */}
+      {desc && (
+        <p style={{ fontSize: '13.5px', color: '#334155', lineHeight: '1.5', margin: '0 0 10px 0', paddingLeft: '27px' }}>
+          {desc}
+        </p>
+      )}
+
+      {/* Row 4: Technology Stack Pills */}
+      {techList.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px', paddingLeft: '27px' }}>
+          {techList.map((tech, i) => (
+            <span key={i} style={{ background: '#eff6ff', color: '#1d4ed8', borderRadius: '6px', padding: '3px 10px', fontSize: '12px', fontWeight: '500', display: 'inline-block' }}>
+              {tech}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Row 5: Action Buttons (Left) & Status (Right) */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '27px', marginTop: '4px' }}>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => onEdit(project)} className="btn btn-secondary btn-sm">
-            ✏️ Edit Project
+          <button type="button" onClick={() => onEdit && onEdit(project)} style={btnStyle}>
+            <span>✏️</span> Edit
+          </button>
+          <button type="button" onClick={() => onMapSkills && onMapSkills(project)} style={btnStyle}>
+            <span>🔗</span> Map Skills
           </button>
           <button
+            type="button"
             onClick={() => {
-              if (window.confirm(`Delete "${project.project_name}"?`)) {
-                onDelete(project.id)
+              if (window.confirm(`Are you sure you want to delete "${project.project_name}"?`)) {
+                onDelete && onDelete(project.id)
               }
             }}
-            className="btn btn-danger btn-sm"
+            style={{ ...btnStyle, color: '#dc2626', borderColor: '#fecaca', background: '#fef2f2' }}
           >
-            🗑 Delete
+            <span>🗑️</span> Delete
           </button>
         </div>
-      </div>
 
-      {project.business_problem && (
-        <div style={{ fontSize: '13px', color: '#334155', margin: '8px 0', lineHeight: '1.4' }}>
-          <strong>Objective:</strong> {project.business_problem}
+        <div>
+          {isValidated && (
+            <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: '800', letterSpacing: '0.5px' }}>
+              VALIDATED
+            </span>
+          )}
+          {!isValidated && isMissingResponsibilities && (
+            <span style={{ background: '#fffbeb', color: '#b45309', padding: '3px 10px', borderRadius: '6px', fontSize: '11.5px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <span>⚠️</span> Missing individual responsibilities
+            </span>
+          )}
+          {!isValidated && !isMissingResponsibilities && project.validation_status === 'REJECTED' && (
+            <span style={{ background: '#fee2e2', color: '#dc2626', padding: '3px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: '800' }}>
+              REJECTED
+            </span>
+          )}
         </div>
-      )}
-
-      <div style={{ fontSize: '13px', color: '#1e293b', margin: '8px 0', lineHeight: '1.5' }}>
-        <strong>Individual Responsibilities:</strong> {project.individual_responsibilities}
-      </div>
-
-      {project.measurable_achievements && (
-        <div style={{ fontSize: '13px', color: '#0369a1', background: '#f0f9ff', padding: '6px 10px', borderRadius: '6px', margin: '8px 0' }}>
-          🎯 <strong>Achievements:</strong> {project.measurable_achievements}
-        </div>
-      )}
-
-      <div style={{ marginTop: '10px' }}>
-        <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', color: '#94a3b8', marginRight: '6px' }}>Technologies:</span>
-        {project.technology_stack ? (
-          project.technology_stack.split(',').map((tech, i) => (
-            <span key={i} className="badge-tag">{tech.trim()}</span>
-          ))
-        ) : (
-          <span style={{ fontSize: '12px', color: '#94a3b8' }}>None specified</span>
-        )}
       </div>
     </div>
   )

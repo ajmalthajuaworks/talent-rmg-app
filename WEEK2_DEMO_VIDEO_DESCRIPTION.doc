@@ -1,0 +1,435 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset="utf-8">
+  <title>Week 2 Demo Video Description — TalentRMG</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page Section1 {
+      size: 8.5in 11.0in;
+      margin: 1.0in 1.0in 1.0in 1.0in;
+      mso-header-margin: 0.5in;
+      mso-footer-margin: 0.5in;
+      mso-paper-source: 0;
+    }
+    div.Section1 { page: Section1; }
+    body {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #1f2937;
+    }
+    h1 {
+      font-size: 20pt;
+      color: #1e3a8a;
+      border-bottom: 2pt solid #2563eb;
+      padding-bottom: 4pt;
+      margin-top: 0;
+      margin-bottom: 12pt;
+      font-weight: 800;
+    }
+    h2 {
+      font-size: 14pt;
+      color: #1e40af;
+      border-bottom: 1pt solid #cbd5e1;
+      padding-bottom: 3pt;
+      margin-top: 18pt;
+      margin-bottom: 8pt;
+      font-weight: 700;
+    }
+    h3 {
+      font-size: 12pt;
+      color: #1f2937;
+      margin-top: 14pt;
+      margin-bottom: 6pt;
+      font-weight: 700;
+    }
+    p { margin-top: 0; margin-bottom: 6pt; }
+    .meta-box {
+      background-color: #f8fafc;
+      border: 1pt solid #cbd5e1;
+      border-left: 4pt solid #2563eb;
+      padding: 10pt 14pt;
+      margin-bottom: 16pt;
+    }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+    .meta-table td {
+      padding: 3pt 6pt;
+      vertical-align: top;
+    }
+    .meta-label {
+      font-weight: bold;
+      color: #475569;
+      width: 25%;
+    }
+    .meta-value {
+      color: #0f172a;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8pt;
+      margin-bottom: 14pt;
+      font-size: 9.5pt;
+    }
+    table.data-table th {
+      background-color: #1e3a8a;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+      padding: 6pt 8pt;
+      border: 1pt solid #1e3a8a;
+    }
+    table.data-table td {
+      padding: 6pt 8pt;
+      border: 1pt solid #e2e8f0;
+      vertical-align: top;
+    }
+    table.data-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2pt 6pt;
+      font-size: 8.5pt;
+      font-weight: bold;
+      border-radius: 3pt;
+      background-color: #eff6ff;
+      color: #1d4ed8;
+      border: 1pt solid #bfdbfe;
+    }
+    .badge-success { background-color: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+    .badge-warning { background-color: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .callout {
+      background-color: #eff6ff;
+      border: 1pt solid #bfdbfe;
+      border-left: 3pt solid #2563eb;
+      padding: 8pt 12pt;
+      margin-top: 8pt;
+      margin-bottom: 12pt;
+      font-size: 10pt;
+    }
+    .code-snippet {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 9.5pt;
+      background-color: #f1f5f9;
+      padding: 2pt 4pt;
+      border-radius: 2pt;
+    }
+    blockquote {
+      margin: 4pt 0 8pt 0;
+      padding: 6pt 10pt;
+      background-color: #f8fafc;
+      border-left: 3pt solid #94a3b8;
+      font-style: italic;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+<div class="Section1">
+
+  <!-- Document Title -->
+  <h1>Week 2 Demonstration Video Description & Walkthrough</h1>
+
+  <!-- Metadata Overview Box -->
+  <div class="meta-box">
+    <table class="meta-table">
+      <tr>
+        <td class="meta-label">Project Title:</td>
+        <td class="meta-value"><strong>Talent Resource Management System (TalentRMG)</strong></td>
+      </tr>
+      <tr>
+        <td class="meta-label">Milestone / Window:</td>
+        <td class="meta-value">Week 2 of 4 (Sprint Milestone 2 Deliverable)</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Presenter / Lead:</td>
+        <td class="meta-value"><strong>Ajmal Thaju</strong> (Engineer / Employee & RMG Admin)</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Assigned Scope:</td>
+        <td class="meta-value">Actor 1 (Engineer Portal) & Actor 2 (Manager Validation & Reminders)</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Target Duration:</td>
+        <td class="meta-value"><strong>04:50 Minutes</strong> (Evaluation Target: 4:00 – 5:00 min)</td>
+      </tr>
+      <tr>
+        <td class="meta-label">Test & Quality Suite:</td>
+        <td class="meta-value"><strong>39 / 39 Automated Tests Passing</strong> | 86.4% Backend Coverage | 100% Rule 2.7 (&le; 200 lines)</td>
+      </tr>
+      <tr>
+        <td class="meta-label">GitHub Repository:</td>
+        <td class="meta-value"><a href="https://github.com/ajmalthajuaworks/talent-rmg-app">https://github.com/ajmalthajuaworks/talent-rmg-app</a> (Branches: <code>main</code>, <code>dev</code>)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Executive Summary -->
+  <h2>1. Executive Summary & Video Purpose</h2>
+  <p>
+    This demonstration video provides a comprehensive, live functional walkthrough of the <strong>Week 2 deliverables</strong> for the Talent Resource Management System (TalentRMG). 
+    While Week 1 established the initial Actor 1 foundation (account registration, manual project logging, initial 6-level rating choices, and sanitized CV preview), 
+    <strong>Week 2 delivers the full bidirectional integration between Actor 1 (Engineer Portal) and Actor 2 (Manager / RMG Admin Portal)</strong>.
+  </p>
+  <p>
+    Specifically, the video demonstrates the end-to-end operational lifecycle: from automated regex-based resume text extraction and multi-row career history onboarding, to dedicated validation status auditing, manager review decisioning with custom rating overrides, and real-time project update reminders with employee completion acknowledgments.
+  </p>
+
+  <!-- Complete Video Transcript and Script Table -->
+  <h2>2. Minute-by-Minute Demonstration Walkthrough & Script</h2>
+  <p>
+    The demonstration is partitioned into 7 sequential segments, strictly aligned with the functional objectives:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Timestamp</th>
+        <th style="width: 20%;">Feature & Objective</th>
+        <th style="width: 32%;">On-Screen Visual Action</th>
+        <th style="width: 36%;">Verbatim Spoken Narration Script</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>0:00 – 0:40</strong></td>
+        <td>
+          <strong>Introduction & Milestone Scope</strong><br>
+          <span class="badge">Milestone 2</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> Engineer Dashboard (<code>http://localhost:5173</code>).<br>
+          Display the navigation sidebar, top navbar, profile completion progress bar, and system readiness metrics.
+        </td>
+        <td>
+          <blockquote>
+            "Hello everyone. My name is Ajmal Thaju, and this is the Week 2 working demonstration video for the Talent Resource Management system. Building upon our Week 1 foundation, Week 2 marks the completion of our modular architecture deconstruction and the live integration between Actor 1—the Engineer Portal—and Actor 2—the Competency Manager and RMG Admin. Today I will demonstrate automated resume text parsing, career history onboarding, manager review decisioning with rating overrides, and bidirectional project update reminders."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>0:40 – 1:25</strong></td>
+        <td>
+          <strong>Profile Setup & Multi-Employment History</strong><br>
+          <span class="badge">ENG-O10–O12</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> <code>/profile-setup</code> &rarr; <code>Personal Info</code>.<br>
+          Demonstrate two-column employment cards with HTML5 date pickers. Click <code>+ Add Another Employment</code>, fill in Company, Role, Start and End dates, and click <code>Save Employment Details</code>.
+        </td>
+        <td>
+          <blockquote>
+            "Under Objectives ENG-O10 through ENG-O12, engineers complete standardized profile onboarding. Here in Personal Info, career history is managed through modular employment cards. Engineers can dynamically append multiple past employments with start and end dates. Saving persists the records directly to the backend database, recalculating the profile readiness score in real time."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>1:25 – 2:15</strong></td>
+        <td>
+          <strong>Automated Resume & Skill Extraction</strong><br>
+          <span class="badge">ENG-O02</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> <code>/resume-upload</code>.<br>
+          Paste realistic unstructured resume text into the text area. Click <code>Parse Resume Text</code>. Show real-time regex entity extraction (Python, Django, Docker, React, Kafka). Click <code>Apply Extracted Data to Profile</code>.
+        </td>
+        <td>
+          <blockquote>
+            "Under Objective ENG-O02, we implemented rule-based resume parsing. Rather than manual data entry, the engineer pastes unstructured resume content. Our backend engine applies regex word-boundary pattern matching against our organizational skill dictionary, extracting contact info and technical competencies without hardcoded fallbacks. Clicking 'Apply Extracted Data' imports them immediately."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>2:15 – 3:00</strong></td>
+        <td>
+          <strong>Competency Validation Status & Evidence Actions</strong><br>
+          <span class="badge">ENG-O05</span> <span class="badge">ENG-O11</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> <code>/validation-status</code>.<br>
+          Toggle status filter tabs (<code>All</code>, <code>Approved</code>, <code>Pending</code>, <code>Action Required</code>). Point out dynamic sidebar counter badge. Locate a rejected/revised competency, highlight manager feedback, click <code>+ Add Evidence</code>, check project evidence, and resubmit.
+        </td>
+        <td>
+          <blockquote>
+            "Next is Objective ENG-O05 and ENG-O11: Competency Validation Status. Engineers have a dedicated dashboard separate from data entry to audit their rating status. Notice how rejected or revised competencies display written manager feedback. The engineer can click '+ Add Evidence' to link concrete customer project engagements and resubmit their self-assessment for review."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>3:00 – 3:50</strong></td>
+        <td>
+          <strong>Manager Review Portal & Rating Overrides</strong><br>
+          <span class="badge">ADM-O01–O03</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> Manager Portal (<code>http://127.0.0.1:8000/dashboard/</code>).<br>
+          Display executive overview KPI stat cards. Show live validation queue. Execute single-click <code>Approve</code>. Open custom review modal for another rating, adjust validated level from <code>ADVANCED</code> to <code>INTERMEDIATE</code>, enter manager notes, and submit.
+        </td>
+        <td>
+          <blockquote>
+            "Now switching to Actor 2: the Manager Portal. Managers monitor organization-wide headcount and review queues. For each competency, managers can approve with one click or execute a rating override per Rule ENG-O11. Here, I adjust this submission to Intermediate, attach an audit feedback note, and submit. The decision immediately syncs back to the engineer's portal."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>3:50 – 4:30</strong></td>
+        <td>
+          <strong>Bidirectional Reminders & Acknowledgment</strong><br>
+          <span class="badge">ADM-O04</span> <span class="badge">ADM-O05</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> Admin Directory &rarr; Switch to Engineer Portal.<br>
+          In Admin, click <code>📝 Feedback / Reminder</code>, flag <code>Project Update Reminder Required</code>, type feedback note, and submit. Switch to Engineer Portal: show high-priority alert banner. Click <code>✓ Mark as Completed</code>. Switch back to Admin: show updated state and <code>Withdraw Notification</code> button.
+        </td>
+        <td>
+          <blockquote>
+            "Under Objectives ADM-O04 and ADM-O05, we have bidirectional reminder workflows. The admin flags an engineer's portfolio as 'Action Required' with custom instructions. In the engineer portal, a high-priority alert banner appears. Once the engineer finishes their update, they click '✓ Mark as Completed'. The admin can also withdraw or clear notifications at any time."
+          </blockquote>
+        </td>
+      </tr>
+
+      <tr>
+        <td><strong>4:30 – 4:50</strong></td>
+        <td>
+          <strong>4-Week Delivery Roadmap, Quality & Conclusion</strong><br>
+          <span class="badge">Deliverables</span>
+        </td>
+        <td>
+          <strong>Screen:</strong> Click <code>📅 Roadmap</code> in top navbar to open <code>RoadmapModal</code>.<br>
+          Scroll through Week 1 (Complete), Week 2 (Complete), Week 3, and Week 4 milestones. Conclude demonstration.
+        </td>
+        <td>
+          <blockquote>
+            "Finally, here is our interactive 4-Week Delivery Roadmap tracking all 19 functional objectives. Week 2 deliverables are 100% complete, backed by 39 passing automated unit tests, 86.4% backend coverage, and strict compliance with the 200-line-per-file architectural constraint. Thank you."
+          </blockquote>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Feature Matrix & Objectives Defense -->
+  <h2>3. Functional Objectives Implementation Matrix</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 18%;">Objective ID</th>
+        <th style="width: 25%;">Feature Name</th>
+        <th style="width: 32%;">Technical Implementation</th>
+        <th style="width: 25%;">Source Artifacts</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ENG-O02</strong></td>
+        <td>AI & Rule-Based Resume Parsing</td>
+        <td>Regex word-boundary matching extracting skills, projects, emails, and phone numbers without hardcoding.</td>
+        <td><code>backend/talent/resume_parser.py</code><br><code>ResumeUpload.jsx</code></td>
+      </tr>
+      <tr>
+        <td><strong>ENG-O04</strong></td>
+        <td>Project Experience Lifecycle</td>
+        <td>Project models extended with <code>validation_status</code> (Pending, Approved, Revised, Rejected) and manager feedback.</td>
+        <td><code>ProjectFormModal.jsx</code><br><code>portal_views.py</code></td>
+      </tr>
+      <tr>
+        <td><strong>ENG-O05</strong></td>
+        <td>Evidence Action Management</td>
+        <td>Interactive modal for attaching, decoupling, and auditing supporting customer projects for competency ratings.</td>
+        <td><code>EvidenceActionModal.jsx</code></td>
+      </tr>
+      <tr>
+        <td><strong>ENG-O10–O12</strong></td>
+        <td>Profile Setup & Career History</td>
+        <td>Multi-step onboarding with dynamic multi-row employment forms, date pickers, and composite readiness tracking.</td>
+        <td><code>ProfileSetup.jsx</code><br><code>EmploymentHistoryCard.jsx</code></td>
+      </tr>
+      <tr>
+        <td><strong>ENG-O13–O15</strong></td>
+        <td>Reminder State Machine</td>
+        <td>Bidirectional status transitions: <code>NONE</code> &rarr; <code>ACTION_REQUIRED</code> &rarr; <code>COMPLETED_BY_EMPLOYEE</code>.</td>
+        <td><code>ProfileOverview.jsx</code><br><code>feedback_views.py</code></td>
+      </tr>
+      <tr>
+        <td><strong>ADM-O01–O03</strong></td>
+        <td>Manager Portal & Rating Overrides</td>
+        <td>Executive dashboard, review queue, single-click approvals, manager rating overrides, and written feedback notes.</td>
+        <td><code>dashboard.html</code><br><code>competency_validate</code></td>
+      </tr>
+      <tr>
+        <td><strong>ADM-O04–O05</strong></td>
+        <td>Reminder Dispatch & Revocation</td>
+        <td>Admin action triggering update notifications and controls allowing managers to withdraw active alerts.</td>
+        <td><code>send_employee_feedback</code><br><code>withdraw_employee_reminder</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pre-Recording Setup Instructions -->
+  <h2>4. Pre-Recording Environment Setup Instructions</h2>
+  <div class="callout">
+    <strong>Required Host Setup:</strong> The application requires two terminal sessions running concurrently before initiating screen recording.
+  </div>
+  <p><strong>Step 1: Start Backend Web Service (Django 6.1 / Port 8000)</strong></p>
+  <p class="code-snippet">cd c:\Users\ajmal.thaju\Project\talent-rmg-app\backend &amp;&amp; python manage.py runserver 8000</p>
+  
+  <p><strong>Step 2: Start Frontend Single Page Application (React 19 / Vite / Port 5173)</strong></p>
+  <p class="code-snippet">cd c:\Users\ajmal.thaju\Project\talent-rmg-app\frontend &amp;&amp; npm run dev</p>
+
+  <p><strong>Step 3: Prepare Browser Windows</strong></p>
+  <ul>
+    <li><strong>Browser Window 1 (Engineer Portal):</strong> Open <code>http://localhost:5173</code> in Google Chrome or Edge. Ensure you are signed in as an engineer.</li>
+    <li><strong>Browser Window 2 (Manager Portal):</strong> Open <code>http://127.0.0.1:8000/dashboard/</code>. Ensure admin authentication is active.</li>
+    <li><strong>Display Settings:</strong> Recommended resolution: 1920 &times; 1080 (1080p) at 100% DPI scale. Use clean browser tabs without distracting bookmarks.</li>
+  </ul>
+
+  <!-- Ready-to-Use Video Description for YouTube / Submission Portals -->
+  <h2>5. Submission Portal Description (Copy-and-Paste Ready)</h2>
+  <p>
+    Below is the formatted text box ready to be pasted directly into YouTube, Google Drive, or LMS assignment submission portals:
+  </p>
+
+  <div style="background-color:#f1f5f9;border:1pt dashed #64748b;padding:12pt;font-family:'Consolas','Courier New',monospace;font-size:9.5pt;line-height:1.4;">
+    <strong>Talent Resource Management (TalentRMG) — Week 2 Working Demonstration</strong><br>
+    Presenter: Ajmal Thaju (Lead Engineer &amp; RMG Admin)<br>
+    Project Milestone: Week 2 of 4 (Sprint Milestone 2)<br>
+    Repository: https://github.com/ajmalthajuaworks/talent-rmg-app<br>
+    <br>
+    This video demonstrates the completed Week 2 milestone for TalentRMG, featuring live integration between Actor 1 (Engineer Portal) and Actor 2 (Manager Validation &amp; RMG Admin Portal):<br>
+    <br>
+    ⏱️ TIMESTAMPS &amp; CHAPTERS:<br>
+    00:00 - Introduction &amp; Week 2 Milestone Scope<br>
+    00:40 - Profile Setup &amp; Multi-Employment History (ENG-O10–O12)<br>
+    01:25 - Automated Resume Parsing &amp; Skill Extraction (ENG-O02)<br>
+    02:15 - Competency Validation Status &amp; Evidence Actions (ENG-O05, ENG-O11)<br>
+    03:00 - Manager Review Portal &amp; Rating Overrides (ADM-O01–ADM-O03)<br>
+    03:50 - Bidirectional Reminders &amp; Acknowledgment (ADM-O04, ADM-O05)<br>
+    04:30 - 4-Week Delivery Roadmap, Quality Metrics &amp; Conclusion<br>
+    <br>
+    ✅ VERIFICATION METRICS:<br>
+    - 39 / 39 Automated Unit Tests Passing (Auth, Projects, Competencies, Reminders, Parser)<br>
+    - 86.4% Backend Line Coverage (exceeds &gt;= 60% requirement)<br>
+    - 100% Compliance with Rule 2.7 (all files &lt;= 200 lines)<br>
+    - CI/CD Pipeline: GitHub Actions passing (backend-test, frontend-build, docker-build)<br>
+  </div>
+
+</div>
+</body>
+</html>

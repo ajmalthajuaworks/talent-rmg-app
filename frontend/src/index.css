@@ -394,6 +394,21 @@ body {
   color: #1d4ed8;
   border: 1px solid #bfdbfe;
 }
+.badge-tech {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+.badge-domain {
+  background: #fdf4ff;
+  color: #c026d3;
+  border: 1px solid #f5d0fe;
+}
+.badge-functional {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
 .badge-tag {
   background: #f1f5f9;
   color: #334155;
